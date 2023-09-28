@@ -237,6 +237,7 @@
                 "src/duckdb/third_party/jaro_winkler/details"
             ], 
             "defines": [
+                "NAPI_DISABLE_CPP_EXCEPTIONS=0",
                 "NAPI_VERSION=6", 
                 "DUCKDB_EXTENSION_AUTOLOAD_DEFAULT=1", 
                 "DUCKDB_EXTENSION_AUTOINSTALL_DEFAULT=1"
