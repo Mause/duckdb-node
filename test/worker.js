@@ -1,4 +1,6 @@
-const { parentPort, workerData } = require('worker_threads');
+const { parentPort, isMainThread, threadId, workerData } = require('worker_threads');
+
+console.log({isMainThread, threadId, workerData, parentPort});
 
 const duckdb = require('..'); // The presence of this line alone causes the issue
 
