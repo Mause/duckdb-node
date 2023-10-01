@@ -41,6 +41,15 @@ struct Task {
 	// Called on a worker thread (i.e., not the main event loop thread)
 	virtual void DoWork() = 0;
 
+	virtual void Handle(const Napi::Error &e) {
+		Napi::HandleScope scope(object.Env());
+
+		auto function = callback.Value();
+		if (!function.IsUndefined()) {
+			function.MakeCallback(object.Value(), {error.Value()});
+		}
+	}
+
 	// Called on the event loop thread after the work has been completed. By
 	// default, call the associated callback, if defined. If you're writing
 	// a Task that uses promises, override this method instead of Callback.
