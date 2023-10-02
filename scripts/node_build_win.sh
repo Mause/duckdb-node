@@ -7,6 +7,8 @@ npm --version
 which node
 
 make clean
+
+npm install --ignore-scripts
 npx node-pre-gyp configure
 
 npm install --build-from-source
