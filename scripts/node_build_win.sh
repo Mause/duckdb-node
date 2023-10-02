@@ -7,6 +7,7 @@ npm --version
 which node
 
 make clean
+npx node-pre-gyp configure
 
 npm install --build-from-source
 # no tests on releases
