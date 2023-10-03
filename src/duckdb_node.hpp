@@ -41,7 +41,7 @@ struct Task {
 	// Called on a worker thread (i.e., not the main event loop thread)
 	virtual void DoWork() = 0;
 
-	virtual void Handle(const Napi::Error &e) {
+	virtual void Handle(const Napi::Error &error) {
 		Napi::HandleScope scope(object.Env());
 
 		auto function = callback.Value();
