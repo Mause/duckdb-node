@@ -104,7 +104,7 @@ jobs:
         uses: hendrikmuhs/ccache-action@main
         with:
           key: ${{ github.job }}
-          save: ${{ ( github.ref == 'refs/heads/main' || github.repository != 'duckdb/duckdb-node' ) && ( matrix.node == '19' ) }}
+          save: ${{ ( github.ref == 'refs/heads/main' || github.repository != 'duckdb/duckdb-node' ) && ( matrix.node == '20' ) }}
 
       - name: Setup
         shell: bash
