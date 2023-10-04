@@ -15,8 +15,8 @@ if [ "$(expr substr $(uname -s) 1 5)" == "Linux" ] && [[ "$TARGET_ARCH" == "arm6
   export CC=aarch64-linux-gnu-gcc
   export CXX=aarch64-linux-gnu-g++
 else
-  export CC=ccache gcc
-  export CXX=ccache g++
+  export CC="ccache gcc"
+  export CXX="ccache g++"
 fi
 
 npm install --build-from-source --target_arch="$TARGET_ARCH"
