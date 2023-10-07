@@ -82,6 +82,19 @@ struct Task {
 	Napi::Reference<Napi::Object> &object;
 };
 
+class PromiseTask : public Task {
+public:
+	PromiseTask(Napi::Reference<Napi::Object> &object, Napi::Promise::Deferred deferred)
+	    : Task(object), deferred(deferred) {
+	}
+
+	void Handle(const Napi::Error &e) override {
+		deferred.Reject(e.Value());
+	}
+
+	Napi::Promise::Deferred deferred;
+};
+
 class Connection;
 
 struct JSRSArgs;

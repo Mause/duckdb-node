@@ -414,9 +414,9 @@ struct RunPreparedTask : public Task {
 	RunType run_type;
 };
 
-struct RunQueryTask : public Task {
+struct RunQueryTask : public PromiseTask {
 	RunQueryTask(Statement &statement, unique_ptr<StatementParam> params, Napi::Promise::Deferred deferred)
-	    : Task(statement), deferred(deferred), params(std::move(params)) {
+	    : PromiseTask(statement, deferred), params(std::move(params)) {
 	}
 
 	void DoWork() override {
@@ -448,7 +448,6 @@ struct RunQueryTask : public Task {
 		}
 	}
 
-	Napi::Promise::Deferred deferred;
 	unique_ptr<duckdb::QueryResult> result;
 	unique_ptr<StatementParam> params;
 };
@@ -644,8 +643,8 @@ QueryResult::~QueryResult() {
 	database_ref = nullptr;
 }
 
-struct GetChunkTask : public Task {
-	GetChunkTask(QueryResult &query_result, Napi::Promise::Deferred deferred) : Task(query_result), deferred(deferred) {
+struct GetChunkTask : public PromiseTask {
+	GetChunkTask(QueryResult &query_result, Napi::Promise::Deferred deferred) : PromiseTask(query_result, deferred) {
 	}
 
 	void DoWork() override {
@@ -671,13 +670,12 @@ struct GetChunkTask : public Task {
 		}
 	}
 
-	Napi::Promise::Deferred deferred;
 	unique_ptr<duckdb::DataChunk> chunk;
 };
 
-struct GetNextArrowIpcTask : public Task {
+struct GetNextArrowIpcTask : public PromiseTask {
 	GetNextArrowIpcTask(QueryResult &query_result, Napi::Promise::Deferred deferred)
-	    : Task(query_result), deferred(deferred) {
+	    : PromiseTask(query_result, deferred) {
 	}
 
 	void DoWork() override {
@@ -713,7 +711,6 @@ struct GetNextArrowIpcTask : public Task {
 		deferred.Resolve(array_buffer);
 	}
 
-	Napi::Promise::Deferred deferred;
 	unique_ptr<duckdb::DataChunk> chunk;
 };
 

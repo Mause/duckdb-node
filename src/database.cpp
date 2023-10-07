@@ -334,9 +334,9 @@ ScanReplacement(duckdb::ClientContext &context, const std::string &table_name, d
 	return nullptr;
 }
 
-struct RegisterRsTask : public Task {
+struct RegisterRsTask : public PromiseTask {
 	RegisterRsTask(Database &database, duckdb_node_rs_function_t rs, Napi::Promise::Deferred deferred)
-	    : Task(database), rs(std::move(rs)), deferred(deferred) {
+	    : PromiseTask(database, deferred), rs(std::move(rs)) {
 	}
 
 	void DoWork() override {
@@ -352,7 +352,6 @@ struct RegisterRsTask : public Task {
 	}
 
 	duckdb_node_rs_function_t rs;
-	Napi::Promise::Deferred deferred;
 };
 
 Napi::Value Database::RegisterReplacementScan(const Napi::CallbackInfo &info) {
