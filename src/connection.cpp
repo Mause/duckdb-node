@@ -133,11 +133,11 @@ void DuckDBNodeUDFLauncher(Napi::Env env, Napi::Function jsudf, std::nullptr_t *
 		descr.Set("ret", ret);
 
 		// actually call the UDF, or rather its vectorized wrapper from duckdb.js/Connection.prototype.register wrapper
-		jsudf({descr});
 
-		if (env.IsExceptionPending()) {
+		try {
+			jsudf({descr});
+		} catch (const Napi::Error &exception) {
 			// bit of a dance to get a nice error message if possible
-			auto exception = env.GetAndClearPendingException();
 			std::string msg = exception.Message();
 			if (msg.empty()) {
 				auto exception_value = exception.Value();
