@@ -2,6 +2,7 @@ name: NodeJS
 on:
   push:
   pull_request:
+  repository_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-${{ github.head_ref || '' }}-${{ github.base_ref || '' }}-${{ github.ref != 'refs/heads/main' || github.sha }}
@@ -23,12 +24,23 @@ jobs:
         with:
           fetch-depth: 0
 
+      - if: github.event.name == 'repository_dispatch'
+        run: |
+          gh repo duckdb/duckdb --tag ${{ github.event.details.ref }}
+          python3 vendor.py --duckdb-dir duckdb
+          rm -rf duckdb
+
       - name: Setup NPM
         shell: bash
         run: ./scripts/node_version.sh upload
         env:
           DUCKDB_NODE_BUILD_CACHE: 0  # create a standalone package
           NODE_AUTH_TOKEN: ${{secrets.NODE_AUTH_TOKEN}}
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: repo
+          path: .
 
   linux-nodejs:
     name: node.js Linux
@@ -86,9 +98,9 @@ jobs:
             target_arch: arm64
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
         with:
-          fetch-depth: 0
+          name: repo
 
       - name: Update apt
         shell: bash
