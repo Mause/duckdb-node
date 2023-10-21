@@ -37,6 +37,8 @@ jobs:
           DUCKDB_NODE_BUILD_CACHE: 0  # create a standalone package
           NODE_AUTH_TOKEN: ${{secrets.NODE_AUTH_TOKEN}}
 
+      - run: make clean
+
       - uses: actions/upload-artifact@v3
         with:
           name: repo
