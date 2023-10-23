@@ -122,7 +122,9 @@ jobs:
 
       - name: Setup
         shell: bash
-        run: ./scripts/node_version.sh
+        run: |
+          chmod +x scripts/node_version.sh
+          ./scripts/node_version.sh
         env:
           DUCKDB_NODE_BUILD_CACHE: 0  # create a standalone package
           NODE_AUTH_TOKEN: ${{secrets.NODE_AUTH_TOKEN}}
