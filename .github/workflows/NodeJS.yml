@@ -24,7 +24,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - if: github.event.name == 'repository_dispatch'
+      - if: github.event.event_type == 'nightly-build'
         run: |
           gh repo duckdb/duckdb --tag ${{ github.event.details.ref }}
           python3 vendor.py --duckdb-dir duckdb
