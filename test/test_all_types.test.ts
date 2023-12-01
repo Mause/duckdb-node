@@ -226,7 +226,40 @@ const suite = describe("test_all_types", () => {
           const correct_result = correct_answer_map[cur_type];
 
           expect(result).deep.eq(correct_result);
-        })
+        }),
+      );
+    }
+  });
+
+  it("dummy", () => {});
+});
+
+const roundtripSuite = describe("test_all_types roundtrip", () => {
+  before(async function () {
+    const all_types = await get_all_types();
+
+    for (const cur_type of all_types) {
+      roundtripSuite.addTest(
+        it(`${cur_type} roundtrip`, async () => {
+          const conn = new duckdb.Database(":memory:");
+
+          const correct_result = correct_answer_map[cur_type][1];
+
+          let result = await new Promise<any[]>((resolve, reject) =>
+            conn.all(
+              Array.isArray(correct_result)
+                ? "select (select unnest(?))"
+                : "select ?",
+              correct_result,
+              (err: DuckDbError | null, data: TableData) =>
+                err ? reject(err) : resolve(data),
+            ),
+          );
+
+          result = result[0]["$1"];
+
+          expect(result).deep.eq(correct_result);
+        }),
       );
     }
   });
