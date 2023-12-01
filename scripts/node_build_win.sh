@@ -8,6 +8,9 @@ which node
 
 make clean
 
+npm install --ignore-scripts
+npx node-pre-gyp configure
+
 npm install --build-from-source
 # no tests on releases
 if [[ ! "$GITHUB_REF" =~ ^(refs/tags/v.+)$ ]] ; then

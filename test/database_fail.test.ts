@@ -10,6 +10,21 @@ describe('error handling', function() {
         db = new sqlite3.Database(':memory:', done);
     });
 
+    it("shouldn't crash when an error is thrown in a callback", (done) => {
+        const message = "this shouldn't crash node";
+
+        db.all('select 1', (err: any) => {
+            if (err === null) {
+                // the first time this callback is called, there's no error yet - so we throw one to give the system something to handle
+                throw new Error(message);
+            } else {
+                // the second time, we have an error (the one thrown above) so we handle it
+                // we don't really know what threw it, or from where, just that it was thrown
+                done(err.message == message ? undefined : err);
+            }
+        });
+    });
+
     it('throw when calling Database() without new', function() {
         assert.throws(function() {
             // @ts-ignore

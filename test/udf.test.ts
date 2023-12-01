@@ -156,6 +156,17 @@ describe('UDFs', function() {
             });
             db.unregister_udf("udf", done);
         });
+
+        it('errors are caught', done => {
+            db.register_udf('udf', 'integer', () => {
+                throw new Error('test error')
+            });
+            db.all('select udf() v', (err: null | Error, rows: TableData) => {
+                assert.ok(err);
+                assert.equal(err!.message, 'test error');
+            });
+            db.unregister_udf('udf', done);
+        });
     });
 
     describe('types', function() {
