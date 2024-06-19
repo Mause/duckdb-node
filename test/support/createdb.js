@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 
+/**
+ * @param {function | undefined} callback
+ */
 function createdb(callback) {
-    var existsSync = require('fs').existsSync || require('path').existsSync;
+    var existsSync = require('fs').existsSync;
     var path = require('path');
 
     var sqlite3 = require('../../lib/duckdb');
